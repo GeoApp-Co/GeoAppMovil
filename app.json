@@ -3,7 +3,7 @@
     "name": "GeoAppMovil",
     "slug": "GeoAppMovil",
     "version": "1.0.0",
-    "scheme" : "geoappmovil",
+    "scheme": "geoappmovil",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.geoapp.movil",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +26,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.geoapp.movil"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -30,7 +35,14 @@
     },
     "plugins": [
       "expo-sqlite",
-      "expo-router"
-    ]
+      "expo-router",
+      "expo-font"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "78951af6-2685-46c0-ba4f-d4312414bcba"
+      }
+    }
   }
 }

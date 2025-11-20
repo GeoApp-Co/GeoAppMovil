@@ -9,7 +9,12 @@ const menuOptions = [
         url: '/diligenciar', // Cambia por navegación interna si usas React Navigation
     },
     {
-        title: 'Lista de Servicios/Manifiestos',
+        title: 'Lista de Servicios/Manifiestos Locales',
+        description: 'Administra los manifiestos / servicios locales',
+        url: '/manifiestosLocales', // Cambia por navegación interna si usas React Navigation
+    },
+    {
+        title: 'Lista de Servicios/Manifiestos en Línea',
         description: 'Administra los manifiestos / servicios creados',
         url: '/manifiestos', // Cambia por navegación interna si usas React Navigation
     },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { login } from '../../services/authService';
 import { useMutation } from '@tanstack/react-query';
@@ -24,7 +24,7 @@ export function LoginScreen() {
     });
     
 
-    const {mutate, isPending} = useMutation({
+    const {mutate, isPending,} = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
             if (data) {
@@ -38,13 +38,18 @@ export function LoginScreen() {
             toast.show(msg, { type: 'danger' });
         },
     });
+    
 
     const onSubmit = (formData: LoginFormType) => {
         mutate({ loginForm: formData });
     };
 
     return (
-        <View className="items-center justify-center flex-1 w-full px-4">
+        <KeyboardAvoidingView 
+            className="items-center justify-center flex-1 w-full px-4"
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
             <View className="w-full p-8 bg-white shadow-2xl rounded-2xl md:p-16 md:max-w-2xl">
                 {/* Logo arriba del título */}
                 <View className="items-center mb-8 md:mb-12">
@@ -98,7 +103,7 @@ export function LoginScreen() {
                     </Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 

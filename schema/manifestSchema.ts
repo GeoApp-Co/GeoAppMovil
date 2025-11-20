@@ -1,17 +1,58 @@
 
-import { z } from "zod";
-import { ClienteSchema } from "./clientSchema";
-import { UserSchema } from "./userSchema";
+import { string, z } from "zod";
+import { userSchema, UserSchema } from "./userSchema";
 import { ManifestTemplateSchema } from "./manifestTemplateSchema";
 import { CarSchema } from "./carSchema";
 import { ItemSchema } from "./ItemSchema";
 import { DisposicionFinalSchema } from "./disposicionFinalSchema";
+import { ClienteSchema } from "./clienteSchema";
 
 export const ResponsePaginationSchema = z.object({
     total: z.number(),
     totalPages: z.number(),
     currentPage: z.number(),
 })
+
+
+export const itemCantidadFormSchema = z.object({
+    itemId: z.number(),
+    cantidad: z.number(),
+    volDesechos: z.number().optional(),
+    nViajes: z.number().optional(),
+    nHoras: z.number().optional(),
+    dosis: z.number().optional(),
+    ubicacion: z.string().optional(),
+    lote: z.string().optional(),
+    dateVencimiento: z.string().optional(),
+});
+
+export const diligenciarFormSchema = z.object({
+    id: z.string(),
+    location: z.string(),
+    clientId: z.number().nullable(),
+    date: z.date(),
+    dateFinal: z.date(),
+    plateId: z.number().nullable(),
+    manifestTemplateId: z.number().nullable(),
+    observations: z.string(),
+    items: z.array(itemCantidadFormSchema.pick({
+        itemId: true,
+        cantidad: true,
+        volDesechos: true,
+        nViajes: true,
+        nHoras: true,
+        dosis: true,
+        ubicacion: true,
+        lote: true,
+        dateVencimiento: true,
+    })),
+    signature: z.string(),
+    signatureClient: z.string(),
+    contactClient: z.string(),
+    positionClient: z.string(),
+    phone: z.string(),
+    photos: z.array(z.string()),
+});
 
 export const ManifestItemSchema = z.object({
     id: z.number(),
@@ -29,13 +70,28 @@ export const ManifestItemSchema = z.object({
     fechaDisposicionFinal: z.string().nullable(),
     certificadoFinal: z.string().nullable(),
     entregado: z.boolean().nullable(),
+
+    dosis: z.string().optional().nullable(),
+    ubicacion: z.string().optional().nullable(),
+    lote: z.string().optional().nullable(),
+    dateVencimiento: z.string().optional().nullable(),
+
     item: ItemSchema.pick({
         code: true,
         id: true,
         name: true,
         unidad: true,
-        categoria: true
+        categoria: true,
+        nHoras: true,
+        nViajes: true,
+        volDesechos: true,
+        dateVencimiento: true,
+        lote: true,
+        dosis: true,
+        ubicacion: true
+
     }),
+
     // Relación con la combinación de sitio y licencia (disposición final)
     disposicionFinal: DisposicionFinalSchema.pick({
         id: true,
@@ -69,7 +125,11 @@ export const ManifestSchema = z.object({
         nHoras: true,
         nViajes: true,
         volDesechos: true,
-    })),
+        dosis: true,
+        ubicacion: true,
+        dateVencimiento: true,
+        lote: true,
+    })).optional(),
     cliente: ClienteSchema.pick({
         alias: true,
         email: true,
@@ -90,6 +150,7 @@ export const ManifestSchema = z.object({
     }),
     manifestTemplate: ManifestTemplateSchema,
     car: CarSchema.pick({
+        id: true,
         carType: true,
         plate: true
     })
@@ -118,4 +179,34 @@ export const paginationManifestSchema = ResponsePaginationSchema.pick({
     totalPages: true,
 }).extend({
     manifests: z.array(manifestPreviewSchema)
+})
+
+export const manifestSchema = ManifestSchema.pick({
+    id:true,
+    location: true,
+    date: true,
+    dateFinal: true,
+    signature: true,
+    signatureClient: true,
+    photos: true,
+    observations: true,
+    createdBy: true,
+    isInvoiced: true,
+    // isInternallyInvoiced: true,
+    // isCertified: true,
+    contactClient: true,
+    positionClient: true,
+    manifestItems: true,
+    cliente: true,
+    // user: true,
+    manifestTemplate: true,
+    car: true,
+    phone: true
+}).extend({
+    user: userSchema.pick({
+        id: true,
+        name: true,
+        cc: true,
+        rol: true
+    })
 })

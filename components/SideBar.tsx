@@ -10,23 +10,26 @@ import { getUser } from '../services/authService';
 import { useEffect } from 'react';
 import { removeItem } from '../utils/storage';
 import { useManifest } from '../hooks/useManifest';
+import { useDiligenciarFormStore } from '../store/diligenciarFormStore';
 
 
 function SideBar() {
 
     const { logout, token, user, setAuth } = useAuth();
     const { clearManifests } = useManifest();
+    const { clearAllStorage } = useDiligenciarFormStore();
     const { isConnected, isInternetReachable } = useNetworkStatus();
 
     const router = useRouter();
     const pathname = usePathname();
     const insets = useSafeAreaInsets();
 
-    const { data, isLoading, error, refetch} = useQuery({
+    const { data, isLoading, error, refetch, isError} = useQuery({
         queryKey: ['authStatus', token],
         queryFn: () => getUser(),
-        enabled: !!token && isConnected && isInternetReachable,
+        enabled: !!token && isConnected && isInternetReachable && !!user,
         refetchOnWindowFocus: false,
+        retry: 1,
     })
     
     const handleLogout = () => {
@@ -34,6 +37,22 @@ function SideBar() {
         logout();
         clearManifests();
         router.replace('/');
+    };
+
+    const handleForceReset = async () => {
+        console.log('🔄 Forzando reinicio completo...');
+        try {
+            // Limpiar todo el almacenamiento
+            await clearAllStorage();
+            // Hacer logout completo
+            logout();
+            clearManifests();
+            // Navegar al inicio
+            router.replace('/');
+            console.log('✅ Reinicio completo exitoso');
+        } catch (error) {
+            console.error('❌ Error en reinicio forzado:', error);
+        }
     };
 
     const handleNavigateLogin = () => {
@@ -68,11 +87,11 @@ function SideBar() {
     return (
         <View style={{ position: 'absolute', top: 10, left: 0, right: 0, zIndex: 50, paddingTop: insets.top }} className="flex-row items-center justify-between w-full px-4 py-2 bg-gray-100 border-b border-gray-300 md:px-12 md:py-4">
             <View className="flex-row items-center space-x-4">
-                {showGoHome && (
+                {showGoHome &&  
                     <TouchableOpacity onPress={handleGoHome} className="p-2 rounded-xl bg-azul">
                         <FontAwesome name="home" size={24} color="#fff" />
                     </TouchableOpacity>
-                )}
+                }
             </View>
             {/* Nombre centrado si está logueado */}
             <View className="items-center justify-center flex-1">
@@ -97,6 +116,19 @@ function SideBar() {
             {isLoading ? (
                 <View className="flex-row items-center p-2">
                     <FontAwesome name="spinner" size={24} color="#2563eb" style={{}} />
+                </View>
+            ) : isError && token ? (
+                // Mostrar botón de forzar reinicio cuando hay error de autenticación
+                <View className="flex-row items-center space-x-2">
+                    
+                    <TouchableOpacity
+                        onPress={handleLogout}
+                        className="flex-row items-center p-2 bg-red-500 rounded-xl"
+                        disabled={!isConnected || !isInternetReachable}
+                        style={{ opacity: (!isConnected || !isInternetReachable) ? 0.5 : 1 }}
+                    >
+                        <FontAwesome name="sign-out" size={20} color="#fff" />
+                    </TouchableOpacity>
                 </View>
             ) : token ? (
                 <TouchableOpacity

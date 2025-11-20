@@ -2,9 +2,9 @@ import { isAxiosError } from "axios"
 import api from "../lib/axios"
 import { TemplatesSchema } from "../schema/templateSchema"
 
-type TemplateType = {
-    search?: string,
-}
+// type TemplateType = {
+//     search?: string,
+// }
 
 export async function getTemplates() {
     try {
@@ -12,6 +12,8 @@ export async function getTemplates() {
         const {data} = await api.get(url, {})
 
         const response = TemplatesSchema.safeParse(data)
+        console.log('geTemplates', response.error);
+        
 
         if (response.success) {
             return response.data

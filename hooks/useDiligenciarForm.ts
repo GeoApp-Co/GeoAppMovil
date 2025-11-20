@@ -3,17 +3,32 @@ import { useDiligenciarFormStore } from "../store/diligenciarFormStore";
 
 export function useDiligenciarForm() {
     const {
+        manifestLocales,
         form,
         resetForm,
         setForm,
         cars,
+        clientes,
         templates,
+        addManifestLocal,
+        errores,
         setCars,
         setTemplates,
+        setClientes,
         refreshCars,
         refreshTemplates,
+        refreshClientes,
         saveLocalTemplates,
         saveLocalCars,
+        saveLocalClientes,
+        setFormItems,
+        items,
+        refreshManifestLocales,
+        saveLocalManifestLocales,
+        clearAllStorage,
+        removeManifestLocal,
+        validateField,
+        clearFieldError
     } = useDiligenciarFormStore();
 
     return {
@@ -27,6 +42,21 @@ export function useDiligenciarForm() {
         refreshCars,
         refreshTemplates,
         saveLocalTemplates,
-        saveLocalCars
+        saveLocalCars,
+        clientes, 
+        setClientes,
+        refreshClientes,
+        saveLocalClientes,
+        setFormItems,
+        addManifestLocal,
+        errores,
+        manifestLocales,
+        items,
+        refreshManifestLocales,
+        saveLocalManifestLocales,
+        removeManifestLocal,
+        clearAllStorage,
+        validateField,
+        clearFieldError
     };
 }

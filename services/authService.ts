@@ -12,7 +12,6 @@ type LoginType = {
 export async function login({ loginForm }: Pick<LoginType, 'loginForm'>) {
     try {
         const { data } = await api.post<string>(`/auth/login`, loginForm);
-        // Si tu API devuelve un campo "error" o "success", valida aquí
         saveItem('AUTH_TOKEN', data);
 
         return data;
@@ -21,9 +20,6 @@ export async function login({ loginForm }: Pick<LoginType, 'loginForm'>) {
             console.log('Login error:', error);
             throw new Error(error.response.data.error);
         }
-        // Log de error genérico
-        console.log('Login error:', error);
-        throw new Error('Error desconocido en login');
     }
 }
 

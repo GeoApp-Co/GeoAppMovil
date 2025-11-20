@@ -4,7 +4,13 @@ export const carTypeEnum = z.enum([
     "CAMIONETA", 
     "COMPACTADOR", 
     "FURGON", 
-    "VOLQUETA"
+    "VOLQUETA",
+    "CARROMOTO",
+    "CARROTANQUE",
+    "CAMION VACIO",
+    "TRACTOMULA VACIO",
+    "GRUA",
+    "⁠OTRO"
 ]);
 
 export const CarSchema = z.object({
